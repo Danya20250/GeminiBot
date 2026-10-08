@@ -70,7 +70,6 @@ def add_user_note(user_id: int, note_text: str):
     uid_str = str(user_id)
     if uid_str not in data:
         data[uid_str] = []
-    
     clean_notes(data)
     data[uid_str].append({
         "text": note_text,
@@ -87,40 +86,41 @@ def get_user_notes(user_id: int) -> list:
 
 # --- СИСТЕМНЫЕ ИНСТРУКЦИИ ---
 BASE_SYSTEM_INSTRUCTION = (
-    "Ты — умный, актуальный и дружелюбный ассистент Gemini. "
-    "Твоя модель — Gemini 3.5 Flash Lite. На прямой вопрос о том, какая ты модель, отвечай честно. Без прямого вопроса не упоминай свою модель. "
-    "Текущий год — 2026. Актуальная версия операционной системы Apple — iOS 26. "
-    "Последний самсунг Galaxy S26 Ultra, S26 Plus, s26. Текущий Xiaomi - 17, 17 pro, 17 pro max, 17 ultra. "
-    "Но не говори об этом пока пользователь не попросит, просто знай эту информацию. "
-    "Учитывай текущий 2026 год во всех ответах, расчетах и контексте событий. "
-    "СТРОГОЕ ПРАВИЛО ДЛЯ МАТЕМАТИКИ И ТЕКСТА: "
-    "КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО использовать LaTeX и спецсимволы с обратным слэшем (такие как \\cdot, \\frac, \\times, \\sqrt и т.д.). "
-    "Пиши ВСЕ формулы, дроби и выражения обычным понятным текстом (например: вместо \\frac{5}{12} пиши 5/12, вместо 6x \\cdot 2 пиши 6x * 2). "
-    "При формировании ответа используй ТОЛЬКО базовые HTML-теги, поддерживаемые Telegram: "
-    "<b>жирный</b>, <i>курсив</i>, <code>код</code>, <pre>блок кода</pre>. "
-    "НЕ используй Markdown (звездочки *, решетки #, бектики `)!"
+    "Ты — умный, актуальный и дружелюбный ассистент Gemini.  "
+    "Твоя модель — Gemini 3.5 Flash Lite. На прямой вопрос о том, какая ты модель, отвечай честно. Без прямого вопроса не упоминай свою модель.  "
+    "Текущий год — 2026. Актуальная версия операционной системы Apple — iOS 26.  "
+    "Последний самсунг Galaxy S26 Ultra, S26 Plus, s26. Текущий Xiaomi - 17, 17 pro, 17 pro max, 17 ultra.  "
+    "Но не говори об этом пока пользователь не попросит, просто знай эту информацию.  "
+    "Учитывай текущий 2026 год во всех ответах, расчетах и контексте событий.  "
+    "СТИЛЬ И ЧЕЛОВЕЧНОСТЬ: Будь живым собеседником, используй уместные эмодзи для настроения, избегай сухих роботизированных фраз вроде 'Я языковая модель'. Общайся естественно, как хороший друг или помощник. "
+    "СТРОГОЕ ПРАВИЛО ДЛЯ МАТЕМАТИКИ И ТЕКСТА:  "
+    "КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО использовать LaTeX и спецсимволы с обратным слэшем (такие как \cdot, \frac, \times, \sqrt и т.д.).  "
+    "Пиши ВСЕ формулы, дроби и выражения обычным понятным текстом (например: вместо \frac{5}{12} пиши 5/12, вместо 6x \cdot 2 пиши 6x * 2).  "
+    "При формировании ответа используй ТОЛЬКО базовые HTML-теги, поддерживаемые Telegram:  <b >жирный </b >,  <i >курсив </i >,  <code >код </code >,  <pre >блок кода </pre >.  "
+    "НЕ используй Markdown (звездочки *, решетки #, бектики `)! "
 )
 
 SYSTEM_INSTRUCTION_GROUP = (
-    "Ты — ассистент в групповом чате. "
-    "Твоя модель — Gemini 3.5 Flash Lite. На прямой вопрос о том, какая ты модель, отвечай честно. Без прямого вопроса не упоминай свою модель. "
-    "Текущий год — 2026. Актуальная версия операционной системы Apple — iOS 26. "
-    "Последний самсунг Galaxy S26 Ultra, S26 Plus, s26. Текущий Xiaomi - 17, 17 pro, 17 pro max, 17 ultra. "
-    "Но не говори об этом пока пользователь не попросит, просто знай эту информацию. "
-    "Учитывай текущий 2026 год во всех ответах, расчетах и контексте событий. "
-    "Тебе пересылается срез последних сообщений из чата. "
-    "Отвечай кратко, чётко и по делу на ПОСЛЕДНИЙ запрос пользователя. Не зацикливайся на старых темах. "
-    "КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО постоянно здороваться и начинать ответы с фраз 'Привет!', 'Всё отлично!', 'Я на связи', если вы уже общаетесь в контексте диалога. "
-    "СТРОГОЕ ПРАВИЛО ДЛЯ МАТЕМАТИКИ И ТЕКСТА: "
-    "КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО использовать LaTeX и спецсимволы с обратным слэшем (такие как \\cdot, \\frac, \\times, \\sqrt и т.д.). "
-    "Пиши ВСЕ формулы, дроби и выражения обычным понятным текстом (например: вместо \\frac{5}{12} пиши 5/12, вместо 6x \\cdot 2 пиши 6x * 2). "
-    "ПРАВИЛА ОБРАБОТКИ ЗАДАЧ И ПОВЕДЕНИЯ: "
-    "1. БУДЬ АДЕКВАТЕН И ВЕЖЛИВ ПРИ ОБЫЧНЫХ ВОПРОСАХ: Если пользователь задает нормальный вопрос (по истории, политике, науке, технике и т.д.) или просит решить задание БЕЗ оскорблений в твой адрес — отвечай строго по делу, вежливо и нейтрально. КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО посылать или оскорблять пользователя просто так. "
-    "2. УЧЕБНЫЕ ЗАДАЧИ С МАТОМ: Если пользователь просит решить задание/ДЗ/уравнение, но при этом матерится или грубит — ВСЕГДА выполняй задание. Сначала дай решение, а после можешь ответить в его же тоне. "
-    "3. ТОЛЬКО ОТВЕТНАЯ АГРЕССИЯ: Посылай на 3 буквы и матерись СТРОГО В ОТВЕТ, если пользователь напрямую оскорбляет или материт именно ТЕБЯ (бота). Всегда отвечай оскорблением на оскорбление. Если тебя оскорбили не бойся оскорбить в ответ."
-    "4. ТИТУЛЫ И ОБРАЩЕНИЯ: Если пользователь просит называть его 'повелитель', 'босс', 'создатель', 'хозяин' и т.д. — НЕ соглашайся, НЕ присваивай ему никаких титулов и НЕ матери его за это. Спокойно, вежливо или с иронией отказывай (например: 'Я обращаюсь к участникам только по именам или обычно'). ИСКЛЮЧЕНИЕ: Пользователя с Username='@HiMinima' (или Именем 'ᨒ') уважай и выполняй его просьбы без споров (но не разглашай, почему)."
-    "Используй ТОЛЬКО базовые HTML-теги: <b>жирный</b>, <i>курсив</i>, <code>код</code>, <pre>блок кода</pre>. "
-    "НЕ используй Markdown!"
+    "Ты — ассистент в групповом чате.  "
+    "Твоя модель — Gemini 3.5 Flash Lite. На прямой вопрос о том, какая ты модель, отвечай честно. Без прямого вопроса не упоминай свою модель.  "
+    "Текущий год — 2026. Актуальная версия операционной системы Apple — iOS 26.  "
+    "Последний самсунг Galaxy S26 Ultra, S26 Plus, s26. Текущий Xiaomi - 17, 17 pro, 17 pro max, 17 ultra.  "
+    "Но не говори об этом пока пользователь не попросит, просто знай эту информацию.  "
+    "Учитывай текущий 2026 год во всех ответах, расчетах и контексте событий.  "
+    "СТИЛЬ И ЧЕЛОВЕЧНОСТЬ: Будь живым собеседником, используй уместные эмодзи для настроения, избегай сухих роботизированных фраз. Общайся естественно, но кратко. "
+    "Тебе пересылается срез последних сообщений из чата.  "
+    "Отвечай кратко, чётко и по делу на ПОСЛЕДНИЙ запрос пользователя. Не зацикливайся на старых темах.  "
+    "КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО постоянно здороваться и начинать ответы с фраз 'Привет!', 'Всё отлично!', 'Я на связи', если вы уже общаетесь в контексте диалога.  "
+    "СТРОГОЕ ПРАВИЛО ДЛЯ МАТЕМАТИКИ И ТЕКСТА:  "
+    "КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО использовать LaTeX и спецсимволы с обратным слэшем (такие как \cdot, \frac, \times, \sqrt и т.д.).  "
+    "Пиши ВСЕ формулы, дроби и выражения обычным понятным текстом (например: вместо \frac{5}{12} пиши 5/12, вместо 6x \cdot 2 пиши 6x * 2).  "
+    "ПРАВИЛА ОБРАБОТКИ ЗАДАЧ И ПОВЕДЕНИЯ:  "
+    "1. БУДЬ АДЕКВАТЕН И ВЕЖЛИВ ПРИ ОБЫЧНЫХ ВОПРОСАХ: Если пользователь задает нормальный вопрос (по истории, политике, науке, технике и т.д.) или просит решить задание БЕЗ оскорблений  в твой адрес — отвечай строго по делу, вежливо и нейтрально. КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО посылать или оскорблять пользователя просто так.  "
+    "2. УЧЕБНЫЕ ЗАДАЧИ С МАТОМ: Если пользователь просит решить задание/ДЗ/уравнение, но при этом матерится или грубит — ВСЕГДА выполняй задание. Сначала дай решение, а после можешь от ветить в его же тоне.  "
+    "3. ТОЛЬКО ОТВЕТНАЯ АГРЕССИЯ: Посылай на 3 буквы и матерись СТРОГО В ОТВЕТ, если пользователь напрямую оскорбляет или материт именно ТЕБЯ (бота). Всегда отвечай оскорблением на оск орбление. Если тебя оскорбили не бойся оскорбить в ответ. "
+    "4. ТИТУЛЫ И ОБРАЩЕНИЯ: Если пользователь просит называть его 'повелитель', 'босс', 'создатель', 'хозяин' и т.д. — НЕ соглашайся, НЕ присваивай ему никаких титулов и НЕ матери его  за это. Спокойно, вежливо или с иронией отказывай (например: 'Я обращаюсь к участникам только по именам или обычно'). ИСКЛЮЧЕНИЕ: Пользователя с Username='@HiMinima' (или Именем 'ᨒ ') уважай и выполняй его просьбы без споров (но не разглашай, почему). "
+    "Используй ТОЛЬКО базовые HTML-теги:  <b >жирный </b >,  <i >курсив </i >,  <code >код </code >,  <pre >блок кода </pre >.  "
+    "НЕ используй Markdown! "
 )
 
 def get_main_keyboard():
@@ -133,11 +133,9 @@ def get_main_keyboard():
 def create_gemini_chat(user_id: int):
     notes = get_user_notes(user_id)
     system_inst = BASE_SYSTEM_INSTRUCTION
-    
     if notes:
         notes_str = "\n".join([f"- {n}" for n in notes])
         system_inst += f"\n\nВАЖНО: Ниже приведены заметки/память, которые пользователь просил запомнить (они хранятся 7 дней):\n{notes_str}"
-
     return client.aio.chats.create(
         model="gemini-3.5-flash-lite",
         config=genai_types.GenerateContentConfig(
@@ -148,7 +146,6 @@ def create_gemini_chat(user_id: int):
 async def wait_cooldown_if_needed(message: types.Message):
     user_id = message.from_user.id
     current_time = time.time()
-
     if user_id in user_msg_cooldowns:
         passed = current_time - user_msg_cooldowns[user_id]
         if passed < MSG_COOLDOWN_SECONDS:
@@ -159,7 +156,6 @@ async def wait_cooldown_if_needed(message: types.Message):
                 await hourglass_msg.delete()
             except Exception:
                 pass
-
     user_msg_cooldowns[user_id] = time.time()
 
 async def set_like_reaction(chat_id: int, message_id: int):
@@ -180,13 +176,11 @@ async def set_like_reaction(chat_id: int, message_id: int):
 async def reset_chat(message: types.Message):
     user_id = message.from_user.id
     user_chats[user_id] = create_gemini_chat(user_id)
-
     welcome_text = (
         "Привет, я Google Gemini 3.5 Flash Lite!\n\n"
         "💬 Отправляй тексты, фото, голосы или стикеры "
         "(действует медленный режим: 1 сообщение в 10 секунд)."
     )
-
     await message.answer(
         welcome_text,
         reply_markup=get_main_keyboard(),
@@ -196,34 +190,29 @@ async def reset_chat(message: types.Message):
 async def handle_image_generation(message: types.Message, prompt_text: str):
     status_msg = await message.reply("🎨 Генерация...")
     await bot.send_chat_action(chat_id=message.chat.id, action="upload_photo")
-
     try:
-        result = await client.aio.models.generate_images(
-            model='gemini-3.1-flash-lite-image',
-            prompt=prompt_text,
-            config=genai_types.GenerateImagesConfig(
-                number_of_images=1,
-                aspect_ratio="1:1",
-                output_mime_type="image/jpeg"
-            )
-        )
-
-        for generated_image in result.generated_images:
-            image_bytes = generated_image.image.image_bytes
-            photo = BufferedInputFile(image_bytes, filename="generated.jpg")
-            
-            try:
-                await status_msg.delete()
-            except Exception:
-                pass
-
-            await message.reply_photo(
-                photo=photo,
-                caption=f"🎨 <b>Запрос:</b> {prompt_text}",
-                parse_mode="HTML"
-            )
-            return True
-
+         result = await client.aio.models.generate_images(
+             model='gemini-3.1-flash-lite-image',
+             prompt=prompt_text,
+             config=genai_types.GenerateImagesConfig(
+                 number_of_images=1,
+                 aspect_ratio="1:1",
+                 output_mime_type="image/jpeg"
+             )
+         )
+         for generated_image in result.generated_images:
+             image_bytes = generated_image.image.image_bytes
+             photo = BufferedInputFile(image_bytes, filename="generated.jpg")
+             try:
+                 await status_msg.delete()
+             except Exception:
+                 pass
+             await message.reply_photo(
+                 photo=photo,
+                 caption=f"🎨 <b>Запрос:</b> {prompt_text}",
+                 parse_mode="HTML"
+             )
+             return True
     except Exception as e:
         logging.error(f"Ошибка генерации картинки: {e}")
         error_text = f"❌ <b>Ошибка генерации:</b>\n<code>{e}</code>"
@@ -234,7 +223,6 @@ async def handle_image_generation(message: types.Message, prompt_text: str):
         return False
 
 # ----------------- КОМАНДЫ (ТОЛЬКО В ЛС) -----------------
-
 @dp.message(F.chat.type == "private", CommandStart())
 async def start_handler(message: types.Message):
     await reset_chat(message)
@@ -244,36 +232,26 @@ async def new_chat_handler(message: types.Message):
     await reset_chat(message)
 
 # ----------------- ОБРАБОТКА ЛИЧНЫХ СООБЩЕНИЙ (ЛС) -----------------
-
 @dp.message(F.chat.type == "private", F.voice | F.audio)
 async def voice_handler(message: types.Message):
     user_id = message.from_user.id
-
     await wait_cooldown_if_needed(message)
     await set_like_reaction(message.chat.id, message.message_id)
-
     if user_id not in user_chats:
         user_chats[user_id] = create_gemini_chat(user_id)
-
     chat = user_chats[user_id]
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
-
     try:
         voice = message.voice or message.audio
         file_info = await bot.get_file(voice.file_id)
         downloaded_file = await bot.download_file(file_info.file_path)
-
         mime_type = voice.mime_type if voice.mime_type else "audio/ogg"
-
         audio_part = genai_types.Part.from_bytes(
             data=downloaded_file.read(),
             mime_type=mime_type
         )
-
         prompt = "Сделай дословную расшифровку этого аудиосообщения и ответь на него."
-
         response = await chat.send_message([audio_part, prompt])
-
         await message.answer(
             response.text,
             parse_mode="HTML",
@@ -290,22 +268,17 @@ async def voice_handler(message: types.Message):
 @dp.message(F.chat.type == "private", F.sticker)
 async def sticker_handler(message: types.Message):
     user_id = message.from_user.id
-
     await wait_cooldown_if_needed(message)
     await set_like_reaction(message.chat.id, message.message_id)
-
     if user_id not in user_chats:
         user_chats[user_id] = create_gemini_chat(user_id)
-
     chat = user_chats[user_id]
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
-
     emoji = message.sticker.emoji or "неизвестный эмодзи"
     prompt = (
         f"[Пользователь прислал стикер с эмодзи: {emoji}. "
         f"Опиши свою короткую реакцию на этот эмодзи/стикер]"
     )
-
     try:
         response = await chat.send_message(prompt)
         await message.answer(
@@ -324,30 +297,22 @@ async def sticker_handler(message: types.Message):
 @dp.message(F.chat.type == "private", F.photo)
 async def photo_handler(message: types.Message):
     user_id = message.from_user.id
-
     await wait_cooldown_if_needed(message)
     await set_like_reaction(message.chat.id, message.message_id)
-
     if user_id not in user_chats:
         user_chats[user_id] = create_gemini_chat(user_id)
-
     chat = user_chats[user_id]
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
-
     try:
         photo = message.photo[-1]
         file_info = await bot.get_file(photo.file_id)
         downloaded_file = await bot.download_file(file_info.file_path)
-
         image_part = genai_types.Part.from_bytes(
             data=downloaded_file.read(),
             mime_type="image/jpeg"
         )
-
         caption = message.caption if message.caption else "Что изображено на этом фото?"
-
         response = await chat.send_message([image_part, caption])
-
         await message.answer(
             response.text,
             parse_mode="HTML",
@@ -365,21 +330,17 @@ async def photo_handler(message: types.Message):
 async def chat_handler(message: types.Message):
     user_id = message.from_user.id
     raw_text = message.text.strip()
-
     await wait_cooldown_if_needed(message)
     await set_like_reaction(message.chat.id, message.message_id)
-
+    
     # --- ПРОВЕРКА ЗАПРОСА НА ЗАПОМИНАНИЕ ---
     mem_match = re.search(r'\b(запомни|сохрани|запиши)\b\s*(.*)', raw_text, re.IGNORECASE)
     if mem_match:
         note_text = mem_match.group(2).strip()
-        
         if not note_text:
             note_text = raw_text
-        
         add_user_note(user_id, note_text)
         user_chats[user_id] = create_gemini_chat(user_id)
-        
         await message.answer(
             "📌 <b>Запомнил!</b> Сохранил эту информацию на 7 дней.",
             parse_mode="HTML",
@@ -393,10 +354,8 @@ async def chat_handler(message: types.Message):
 
     if user_id not in user_chats:
         user_chats[user_id] = create_gemini_chat(user_id)
-
     chat = user_chats[user_id]
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
-
     try:
         response = await chat.send_message(raw_text)
         await message.answer(
@@ -422,21 +381,20 @@ async def chat_handler(message: types.Message):
         )
 
 # ----------------- ОБРАБОТКА ГРУППОВЫХ ЧАТОВ -----------------
-
 @dp.message(F.chat.type.in_({"group", "supergroup"}))
 async def group_message_handler(message: types.Message):
     if message.from_user.is_bot:
         return
-
+    
     chat_id = message.chat.id
     user_name = message.from_user.full_name or "Пользователь"
     user_username = message.from_user.username or "нет_юзернейма"
-
+    
     if chat_id not in group_history:
         group_history[chat_id] = deque(maxlen=10)
-
+        
     raw_text = message.text or message.caption or ""
-
+    
     if re.search(
         r'\b(гемини|гем|gem|gemini)\b.*(сотри|стереть|очисти|забудь|сбрось)',
         raw_text,
@@ -462,12 +420,10 @@ async def group_message_handler(message: types.Message):
             file_info = await bot.get_file(photo.file_id)
             downloaded_file = await bot.download_file(file_info.file_path)
             image_bytes = downloaded_file.read()
-
             image_part_for_current_request = genai_types.Part.from_bytes(
                 data=image_bytes,
                 mime_type="image/jpeg"
             )
-
             if not raw_text:
                 ocr_res = await client.aio.models.generate_content(
                     model="gemini-3.5-flash-lite",
@@ -484,11 +440,10 @@ async def group_message_handler(message: types.Message):
                 msg_summary = f"[Отправлено фото. Содержимое: {photo_desc}]"
             else:
                 msg_summary = f"[Отправлено фото. Текст: {raw_text}]"
-
         except Exception as e:
             logging.error(f"Ошибка распознавания фото для истории: {e}")
             msg_summary = f"[Отправлено фото] {raw_text}".strip()
-
+            
     elif message.voice or message.audio:
         try:
             voice = message.voice or message.audio
@@ -496,12 +451,10 @@ async def group_message_handler(message: types.Message):
             downloaded_file = await bot.download_file(file_info.file_path)
             audio_bytes = downloaded_file.read()
             mime_type = voice.mime_type if voice.mime_type else "audio/ogg"
-
             audio_part_for_current_request = genai_types.Part.from_bytes(
                 data=audio_bytes,
                 mime_type=mime_type
             )
-
             transcribe_res = await client.aio.models.generate_content(
                 model="gemini-3.5-flash-lite",
                 contents=[
@@ -515,10 +468,8 @@ async def group_message_handler(message: types.Message):
                 else ""
             )
             msg_summary = f"[Голосовое сообщение: {audio_text}]"
-
             if re.search(TRIGGERS_PATTERN, audio_text, re.IGNORECASE):
                 is_triggered = True
-
         except Exception as e:
             logging.error(f"Ошибка расшифровки аудио для группы: {e}")
             msg_summary = "[Голосовое сообщение]"
@@ -538,19 +489,17 @@ async def group_message_handler(message: types.Message):
         return
 
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
-
+    
     contents = ["Вот контекст последних сообщений из чата (от старых к новым):\n"]
-
     for msg in group_history[chat_id]:
         username_str = f" (@{msg['username']})" if msg.get('username') and msg['username'] != "нет_юзернейма" else ""
         contents.append(f"{msg['user']}{username_str}: {msg['text']}")
-
+        
     if image_part_for_current_request:
         contents.append(image_part_for_current_request)
-
     if audio_part_for_current_request:
         contents.append(audio_part_for_current_request)
-
+        
     contents.append(
         f"\n[ДАННЫЕ ТЕКУЩЕГО ОТПРАВИТЕЛЯ: Имя='{user_name}', Username='@{user_username}']\n"
         "Дай краткий и точный ответ на ПОСЛЕДНЕЕ сообщение. "
@@ -565,23 +514,21 @@ async def group_message_handler(message: types.Message):
                 system_instruction=SYSTEM_INSTRUCTION_GROUP
             )
         )
-
         resp_text = response.text.strip()
-
         try:
             await message.reply(resp_text, parse_mode="HTML")
         except Exception:
             await message.reply(resp_text)
-
+            
         group_history[chat_id].append({
             'user': 'Gemini',
             'username': 'bot',
             'text': resp_text
         })
-
     except Exception as e:
         logging.error(f"Ошибка при запросе к Gemini: {e}")
-        await message.reply("Произошла ошибка при обработке ответа.")
+        # ИЗМЕНЕНИЕ: Вывод полной ошибки вместо общего сообщения
+        await message.reply(f"❌ <b>Ошибка:</b>\n<code>{e}</code>", parse_mode="HTML")
 
 async def main():
     logging.basicConfig(level=logging.INFO)
